@@ -27,10 +27,6 @@ class Scanner:
                             print word
 
     def __enough_room_for_word(self, lengthOfWord, row, column):
-        # if row == 4 and column == 48:
-        #     print 'position %d, %d' % (row, column)
-        #     print 'row check %d, %d' % (row + lengthOfWord*self.direction[1], self.puzzleDimensions[0])
-        #     print 'column check %d, %d' % (column + lengthOfWord*self.direction[0], self.puzzleDimensions[1])
         if row + lengthOfWord*self.direction[1] > self.puzzleDimensions[0]:
             return False
         elif column + lengthOfWord*self.direction[0] > self.puzzleDimensions[1]:
