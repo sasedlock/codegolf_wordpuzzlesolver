@@ -15,7 +15,8 @@ class Scanner:
     def __init__(self, direction, puzzle, wordsToFind):
         self.direction = direction
         self.puzzle = puzzle
-        self.puzzleDimensions = [len(puzzle[0]), len(puzzle)]
+        self.puzzleRows = len(puzzle)
+        self.puzzleColumns = len(puzzle[0])
         self.wordsToFind = wordsToFind
 
     def scan_for_words(self):
@@ -27,9 +28,9 @@ class Scanner:
                             print word
 
     def __enough_room_for_word(self, lengthOfWord, row, column):
-        if row + lengthOfWord*self.direction[1] > self.puzzleDimensions[0]:
+        if row + lengthOfWord * self.direction[1] > self.puzzleColumns:
             return False
-        elif column + lengthOfWord*self.direction[0] > self.puzzleDimensions[1]:
+        elif column + lengthOfWord * self.direction[0] > self.puzzleRows:
             return False
         else:
             return True
@@ -43,8 +44,8 @@ class Scanner:
 
     def __search_for_word(self, word, row, column):
         for position, letter in enumerate(word[1:]):
-            rowOffset = (position+1)*self.direction[1]
-            columnOffset = (position+1)*self.direction[0]
+            rowOffset = (position + 1) * self.direction[1]
+            columnOffset = (position + 1) * self.direction[0]
             if not self.puzzle[row + rowOffset][column + columnOffset] == letter:
                 return False
         return True
