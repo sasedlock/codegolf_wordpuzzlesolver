@@ -1,5 +1,7 @@
-class Commander:
-    directions = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]]
+from observable import Observable
+from observer import Observer
+
+class Commander(Observer):
     answers = []
     scanners = []
 
@@ -10,9 +12,13 @@ class Commander:
     def test(self):
         print self.wordsToSearchFor[0]
 
-class Scanner:
+    def update(self, *args, **kwargs):
+        print("Word received: {0}".format(args))
+
+class Scanner():
 
     def __init__(self, direction, puzzle, wordsToFind):
+        self.observable = Observable()
         self.direction = direction
         self.puzzle = puzzle
         self.puzzleRows = len(puzzle)
@@ -25,7 +31,10 @@ class Scanner:
                 for word in self.__get_first_letter_matches(letter):
                     if self.__enough_room_for_word(len(word), row, column):
                         if self.__search_for_word(word, row, column):
-                            print word
+                            self.observable.update_observers(word)
+
+    def register(self, observer):
+        self.observable.register(observer)
 
     def __enough_room_for_word(self, lengthOfWord, row, column):
         if row + lengthOfWord * self.direction[1] > self.puzzleColumns:
