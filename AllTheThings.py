@@ -2,7 +2,7 @@ from observable import Observable
 from observer import Observer
 
 class Commander(Observer):
-    answers = []
+    answers = {}
     scanners = []
 
     def __init__(self, puzzleToSearch, wordsToSearchFor):
@@ -13,7 +13,15 @@ class Commander(Observer):
         print self.wordsToSearchFor[0]
 
     def update(self, *args, **kwargs):
-        print("Word received: {0}".format(args))
+        self.addWordToAnswers(args[0],args[1])
+
+    def addWordToAnswers(self, word, coordinates):
+        self.answers[word] = coordinates
+        self.tryToPrintAnswers()
+
+    def tryToPrintAnswers(self):
+        if len(self.answers.keys()) == len(self.wordsToSearchFor):
+            print self.answers
 
 class Scanner():
 
@@ -31,7 +39,7 @@ class Scanner():
                 for word in self.__get_first_letter_matches(letter):
                     if self.__enough_room_for_word(len(word), row, column):
                         if self.__search_for_word(word, row, column):
-                            self.observable.update_observers(word)
+                            self.observable.update_observers(word, [])
 
     def register(self, observer):
         self.observable.register(observer)
