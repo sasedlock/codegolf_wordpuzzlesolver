@@ -6,7 +6,7 @@ from observer import Observer
 
 class AmericanStockMarket(Observer):
     def update(self, *args, **kwargs):
-        print("American stock market received: {0}\n{1}".format(args[0], kwargs))
+        print("American stock market received: {0}\n{1}".format(args, kwargs))
 
 
 class JapaneseStockMarket(Observer):
@@ -22,5 +22,5 @@ if __name__ == "__main__":
     japanese_observer = JapaneseStockMarket()
     observable.register(japanese_observer)
 
-    observable.update_observers('Market Rally', 'Hello World')
+    observable.update_observers('Market Rally', something='hello Scott')
 

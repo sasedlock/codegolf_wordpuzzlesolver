@@ -23,9 +23,14 @@ class Test:
         #jorts
         [(16,0),(17,0),(18,0),(19,0),(20,0)]
     ]
-    
+
     def run(self, output):
-        if output == self.expectedOutput:
+        checkCounter = 0
+        for row in output:
+            for expectedRow in self.expectedOutput:
+                if row == expectedRow:
+                    checkCounter += 1
+        if checkCounter == len(self.expectedOutput):
             print("Test passed")
             return
         print("Test failed")

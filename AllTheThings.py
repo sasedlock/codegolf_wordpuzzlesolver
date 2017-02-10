@@ -2,25 +2,22 @@ from observable import Observable
 from observer import Observer
 
 class Commander(Observer):
-    answers = {}
+    answers = []
     scanners = []
 
     def __init__(self, puzzleToSearch, wordsToSearchFor):
         self.puzzleToSearch = puzzleToSearch
         self.wordsToSearchFor = wordsToSearchFor
 
-    def test(self):
-        print self.wordsToSearchFor[0]
-
     def update(self, *args, **kwargs):
-        self.addWordToAnswers(args[0],args[1])
+        self.addWordToAnswers(args[0])
 
-    def addWordToAnswers(self, word, coordinates):
-        self.answers[word] = coordinates
+    def addWordToAnswers(self, coordinates):
+        self.answers.append(coordinates)
         self.tryToPrintAnswers()
 
     def tryToPrintAnswers(self):
-        if len(self.answers.keys()) == len(self.wordsToSearchFor):
+        if len(self.answers) == len(self.wordsToSearchFor):
             print self.answers
 
 class Scanner():
@@ -38,8 +35,9 @@ class Scanner():
             for column, letter in enumerate(letters):
                 for word in self.__get_first_letter_matches(letter):
                     if self.__enough_room_for_word(len(word), row, column):
-                        if self.__search_for_word(word, row, column):
-                            self.observable.update_observers(word, [])
+                        foundWordCoordinates = self.__search_for_word(word, row, column)
+                        if len(foundWordCoordinates) != 0:
+                            self.observable.update_observers(foundWordCoordinates)
 
     def register(self, observer):
         self.observable.register(observer)
@@ -60,10 +58,14 @@ class Scanner():
         return matches
 
     def __search_for_word(self, word, row, column):
+        wordCoordinates = [(column, row)]
+
         for position, letter in enumerate(word[1:]):
             rowOffset = (position + 1) * self.direction[1]
             columnOffset = (position + 1) * self.direction[0]
             if not self.puzzle[row + rowOffset][column + columnOffset] == letter:
-                return False
-        return True
+                return []
+            else:
+                wordCoordinates.append((column + columnOffset, row + rowOffset))
+        return wordCoordinates
 
